@@ -1,0 +1,40 @@
+FROM nvidia/cuda:10.2-cudnn7-devel-ubuntu16.04
+
+# docker run -it --rm -e DISPLAY=$DISPLAY --gpus=all --name=superpoint  -v /hdd/datasets/memes:/memes -v /tmp/.X11-unix:/tmp/.X11-unix  -e NVIDIA_DRIVER_CAPABILITIES=video,compute,utility  nvidia/cuda:10.2-cudnn7-devel-ubuntu16.04
+
+# docker run -it --rm --gpus=all --name=superpoint  -v /hdd/datasets/memes:/memes -v /hdd/memedef:/memedef -e NVIDIA_DRIVER_CAPABILITIES=video,compute,utility  meme:1.0
+
+# docker run --gpus=all --name=superpoint  -v /hdd/datasets/memes:/memes -v /hdd/memedef:/memedef -e NVIDIA_DRIVER_CAPABILITIES=video,compute,utility meme:1.0 black /memedef/show_points.py
+
+# docker build -f DOCKERFILE -t meme:1.0 .
+
+# find ./ -name "*.webp" -exec dwebp {} -o {}.png \;
+
+WORKDIR /workspace
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+         software-properties-common \
+         build-essential \
+         cmake \
+         git \
+         curl \
+         eog \
+         wget \
+         ca-certificates \
+         libjpeg-dev \
+         libpng-dev
+
+# apt get git, eog, python (below)
+
+#
+
+RUN apt-get update && apt-get install -y software-properties-common && add-apt-repository ppa:deadsnakes/ppa && \
+    apt-get update && apt-get install -y python3.7 python3.7-dev python3-pip
+
+RUN git clone https://github.com/magicleap/SuperPointPretrainedNetwork.git
+
+RUN python3.7 -m pip install scikit-build
+RUN python3.7 -m pip install opencv-python
+RUN python3.7 -m pip install torch
+RUN python3.7 -m pip install black
+
