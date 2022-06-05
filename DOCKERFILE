@@ -30,6 +30,7 @@ ENV OMP_NUM_THREADS=8
 
 ENV TZ=Asia/Singapore
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN apt-get update
 RUN apt install -y software-properties-common
 RUN add-apt-repository ppa:strukturag/libheif 
 RUN add-apt-repository ppa:strukturag/libde265
@@ -37,6 +38,20 @@ RUN apt-get update
 RUN apt-get install -y libheif1 libheif-dev libde265-dev
 
 RUN pip install pyheif
+
+RUN apt-get install -y perl make
+
+RUN cd /tmp \
+	&& wget https://exiftool.org/Image-ExifTool-12.41.tar.gz \
+	&& tar -zxvf Image-ExifTool-12.41.tar.gz \
+	&& cd Image-ExifTool-12.41 \
+	&& perl Makefile.PL \
+	&& make test \
+	&& make install \
+	&& cd .. \
+	&& rm -rf Image-ExifTool-12.41
+
+RUN pip install pyexiftool
 
 # Usage Examples -------------------------------------------------------------------------------------------------------
 

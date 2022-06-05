@@ -1,3 +1,4 @@
 deps/
 det_env/
 old_DOCKERFILE
+*.pyc
