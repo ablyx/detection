@@ -1,7 +1,9 @@
+ARG BUILD_ENV=invalid
 # YOLOv5 🚀 by Ultralytics, GPL-3.0 license
 
 # Start FROM NVIDIA PyTorch image https://ngc.nvidia.com/catalog/containers/nvidia:pytorch
-FROM nvcr.io/nvidia/pytorch:22.04-py3
+# only use yolov5 at home, not on mac
+FROM nvcr.io/nvidia/pytorch:22.04-py3 AS build-home
 RUN rm -rf /opt/pytorch  # remove 1.2GB dir
 
 # Downloads to user config dir
@@ -17,6 +19,19 @@ RUN pip uninstall -y torch torchvision torchtext Pillow
 RUN pip install --no-cache -r requirements.txt albumentations wandb gsutil notebook Pillow>=9.1.0 \
     torch torchvision --extra-index-url https://download.pytorch.org/whl/cu113
 
+FROM ubuntu:20.04 AS build-macos
+# Install linux packages
+RUN apt update && apt install -y git zip htop screen libgl1-mesa-glx
+RUN apt install -y python3 python3-pip
+# Install pip packages
+COPY requirements.txt .
+# this works, but we probably want to alias this with python
+RUN which python3
+RUN python3 -m pip install --upgrade pip
+# do i really want to install torch which is huge
+RUN pip install --no-cache -r requirements.txt albumentations wandb gsutil notebook Pillow>=9.1.0 \
+    torch torchvision --extra-index-url https://download.pytorch.org/whl/cu113
+FROM build-${BUILD_ENV}
 # Create working directory
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app

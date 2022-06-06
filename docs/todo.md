@@ -1,3 +1,6 @@
+fix macos docker image
+alias python3 with python
+
 person_features + im_id + box_id
 
 in image_handler.resize, check if imgae is pillow image, then dont read as array.
