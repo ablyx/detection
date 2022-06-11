@@ -19,7 +19,10 @@ def resize(img: np.ndarray, size: Tuple[int, int], interpolation=Image.BILINEAR)
     """
     # Resizing needs "PIL.Image" objects, as scipy method was deprecated
     # and numpy does not support these sort of image transformations
-    pil_img = Image.fromarray(img)
+    if isinstance(img, Image.Image):
+        pil_img = img
+    else:
+        pil_img = Image.fromarray(img)
     pil_img = pil_img.resize(size[::-1], interpolation)
     return np.array(pil_img)
 

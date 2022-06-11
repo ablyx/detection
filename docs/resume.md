@@ -10,6 +10,8 @@ get trip images
 `python preprocess.py`
 this will run preprocess to get trip images
 `python detection.py`  
+this extracts the reid features.
+`python reid_emb.py`
 
 To build the docker image:
 cd /hdd/projs/detection

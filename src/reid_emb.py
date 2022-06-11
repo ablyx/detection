@@ -6,6 +6,8 @@ from encoder import OsNetEncoder
 from detection import get_people_bboxs
 from preprocess import get_trip_images, get_im_from_heif
 import code
+import numpy as np
+import pickle
 
 encoder = OsNetEncoder(
     input_width=704,
@@ -33,18 +35,24 @@ def get_reid_emb():
             idx = bbox[0].astype(int)
             x,y,w,h = bbox[1:5].astype(int)
             im = get_im_from_heif(fps[idx])
-            code.interact(local=dict(globals(), **locals())) 
             #person_crop = im[y:y+h, x:x+w]
             person_crop = im.crop((x-w//2,y-h//2,x+w//2,y+h//2))
             #person_crop2 = im.crop((y,x,y+h,x+w))
-            
+            """ 
             if len(ppl_crops) < 10:
-                person_crop.save(f"../save/person_crop_test{count}.jpg")
+                pass
+                #person_crop.save(f"../save/person_crop_test{count}.jpg")
                 #person_crop2.save("../save/person_crop_test2.jpg")
             else:
                 break
                 #exit()
+            """
+            """
+            if count == 10:
+                break
+            """
             count+=1
+
             #print(person_crop.size)
             #print(fps[idx])
             cw, ch = person_crop.size
@@ -52,9 +60,13 @@ def get_reid_emb():
                 print(fps[idx], cw, ch)
             ppl_crops.append(person_crop)
         print("get_features")
-        embs = encoder.get_features(ppl_crops)
+        embs_lst = encoder.get_features(ppl_crops)
+        embs = np.vstack(embs_lst)
+        #idxs_col = bboxs[:,0][:count]
         idxs_col = bboxs[:,0]
-        reid_embs = np.hstack([idxs_col, embs]) 
+        idxs_col_2d = np.expand_dims(idxs_col, 1)
+        #code.interact(local=dict(globals(), **locals()))
+        reid_embs = np.hstack([idxs_col_2d, embs]) 
         with open(EMBS_PKL, 'wb') as f:
             pickle.dump(reid_embs, f)
     return reid_embs

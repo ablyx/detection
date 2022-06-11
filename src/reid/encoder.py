@@ -89,7 +89,8 @@ class OsNetEncoder:
                 # Translating to np.ndarray avoids further issues with deepcopying torch.Tensors (in "tracker")
                 numpy_features = patch_features.cpu().detach().numpy()
                 # numpy_features returns a list of a list of features, so we get the first entry as an action of flattening
-                features.append(compress_feature_vector(numpy_features[0]))
+                # features.append(compress_feature_vector(numpy_features[0]))
+                features.append(numpy_features[0])
                 # print(list(numpy_features[0])) # Debugging console out
                 final_time = time.time()
                 # print(f"[INFO] {numpy_features} appended")
