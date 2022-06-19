@@ -13,6 +13,11 @@ this will run preprocess to get trip images
 this extracts the reid features.
 `python reid_emb.py`
 
+To view cluster images
+```
+eog `cat c0.txt`
+```
+
 To build the docker image:
 cd /hdd/projs/detection
 docker build -f DOCKERFILE -t yolov5:exif .

@@ -53,7 +53,7 @@ def addLoggingLevel(levelName, levelNum, methodName=None):
 
 addLoggingLevel('TRACE', logging.DEBUG - 5)
 logging.getLogger(__name__).setLevel("TRACE")
-logging.getLogger(__name__).trace('that worked')
+#logging.getLogger(__name__).trace('that worked')
 logging.basicConfig(level=0)
-mslogger.trace('so did this')
-print(logging.TRACE)
+#mslogger.trace('so did this')
+#print(logging.TRACE)
